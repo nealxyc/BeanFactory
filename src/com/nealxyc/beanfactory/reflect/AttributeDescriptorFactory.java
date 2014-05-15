@@ -1,10 +1,13 @@
 package com.nealxyc.beanfactory.reflect;
 
+import net.sf.cglib.beans.BeanGenerator;
+
 public class AttributeDescriptorFactory {
 	
 	public AttributeDescriptorFactory(String name, Class<?> type){
-		this.name = name ;
-		this.type = type ;
+		BeanGenerator gen = new BeanGenerator();
+		gen.addProperty(name, type);
+//		gen.
 	}
 	
 }
