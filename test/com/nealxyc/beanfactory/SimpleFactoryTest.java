@@ -31,4 +31,14 @@ public class SimpleFactoryTest {
 		mi.setName(null);
 	}
 	
+	@Test
+	public void testCreateFromBeanGenerator() throws InstantiationException, IllegalAccessException{
+		Class<? extends MyInterface> cls  = SimpleFactory.createWithBeanGenerator(MyInterface.class);
+		MyInterface mi = cls.newInstance();
+		Assert.assertNotNull(mi);
+		Assert.assertNull(mi.getName());
+		mi.setName("myName");
+		Assert.assertEquals("myName",mi.getName());
+	}
+	
 }
