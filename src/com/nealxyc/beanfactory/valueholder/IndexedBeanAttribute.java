@@ -1,13 +1,14 @@
 package com.nealxyc.beanfactory.valueholder;
 
+import com.nealxyc.beanfactory.reflect.AttributeDescriptor;
 
-public class IndexedBeanAttribute<T> extends ValueHolder<T>{
+public class IndexedBeanAttribute extends ValueHolder{
 	private final String name ;
 	private int index ;
 	
-	public IndexedBeanAttribute(String name, Class<T> type){
-		super(null, type);
-		this.name = name ;
+	public IndexedBeanAttribute(AttributeDescriptor desp){
+		super(null, desp.getType());
+		this.name = desp.getName() ;
 	}
 
 	public String getName() {
@@ -21,13 +22,4 @@ public class IndexedBeanAttribute<T> extends ValueHolder<T>{
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
-	public T get(){
-		return super.getValue();
-	}
-	
-	public void set(T t){
-		super.setValue(t);
-	}
-	
 }

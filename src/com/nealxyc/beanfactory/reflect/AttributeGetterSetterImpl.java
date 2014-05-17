@@ -105,5 +105,20 @@ public class AttributeGetterSetterImpl implements AttributeGetterSetter {
     private static Collection<Method> getSetters(Method[] methods) {
 	return Collections2.filter(Arrays.asList(methods), SETTER_PREDICATE);
     }
+
+	@Override
+	public boolean hasMethod(Method method) {
+		return isGetter(method) || isSetter(method);
+	}
+
+	@Override
+	public boolean isGetter(Method method) {
+		return getter.equals(method);
+	}
+
+	@Override
+	public boolean isSetter(Method method) {
+		return setter.equals(method);
+	}
     
 }
