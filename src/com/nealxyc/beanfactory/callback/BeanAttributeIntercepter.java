@@ -11,8 +11,8 @@ import net.sf.cglib.proxy.MethodProxy;
 
 public class BeanAttributeIntercepter implements MethodInterceptor{
 
-	private AttributeGetterSetter[] gsetters ;
-	private IndexedBeanAttribute[] attrs;
+	protected AttributeGetterSetter[] gsetters ;
+	protected IndexedBeanAttribute[] attrs;
 	private Class<?> targetClass ;//Might be interface
 	private Object targetInstance ;
 	
@@ -39,24 +39,47 @@ public class BeanAttributeIntercepter implements MethodInterceptor{
 		if(targetInstance == obj ){//Check if they are the same reference
 			if(args == null || args.length == 0){
 				//find getter
-				for(int i = 0 ; i < gsetters.length; i ++){
-					if(gsetters[i].isGetter(method)){
-						return attrs[i].getValue();
-					}
+				int i = findGetterIndex(method);
+				if(i > -1){
+				    return attrs[i].getValue() ;
 				}
+				//TODO getter not found ?
+				
 			}else if(args.length == 1){
 				//find setter
-				for(int i = 0 ; i < gsetters.length; i ++){
-					if(gsetters[i].isSetter(method)){
-						attrs[i].setValue(args[0]);
-						return null ;
-					}
+			    	int i = findSetterIndex(method);
+			    	if(i > -1){
+			    	    attrs[i].setValue(args[0]);
 				}
+				//TODO setter not found ?
+				
 			}else{
 				//TODO exception ?
 			}
 		}
 		return null;
+	}
+	
+	public Class<?> getTargetClass(){
+	    return this.targetClass ;
+	}
+	
+	protected int findSetterIndex(Method method){
+	    for(int i = 0 ; i < gsetters.length; i ++){
+		if(gsetters[i].isSetter(method)){
+			return i;
+		}
+	    }
+	    return -1 ;
+	}
+	
+	protected int findGetterIndex(Method method){
+	    for(int i = 0 ; i < gsetters.length; i ++){
+		if(gsetters[i].isGetter(method)){
+			return i;
+		}
+	    }
+	    return -1 ;
 	}
 	
 }

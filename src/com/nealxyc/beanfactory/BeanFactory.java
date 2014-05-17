@@ -13,7 +13,7 @@ public class BeanFactory {
 	private Map<Class, BeanAttributeIntercepterFactory> intercepterFactoryMap = Maps.newHashMap();
 	private Map<Class, Enhancer> enhancerMap = Maps.newHashMap();
 
-	private BeanAttributeIntercepterFactory getIntercepterFacotry(Class<?> cls) {
+	private synchronized BeanAttributeIntercepterFactory getIntercepterFacotry(Class<?> cls) {
 		if (!intercepterFactoryMap.containsKey(cls)) {
 			BeanAttributeIntercepterFactory factory = new BeanAttributeIntercepterFactory(ClassInspector.readClass(cls));
 			intercepterFactoryMap.put(cls, factory);
@@ -21,7 +21,7 @@ public class BeanFactory {
 		return intercepterFactoryMap.get(cls);
 	}
 	
-	private <T> Enhancer enhanceClass(Class<T> cls){
+	private synchronized <T> Enhancer enhanceClass(Class<T> cls){
 		if(Enhancer.isEnhanced(cls) && enhancerMap.containsKey(cls)){
 			return enhancerMap.get(cls);
 		}
@@ -36,6 +36,16 @@ public class BeanFactory {
 		Enhancer eh = enhanceClass(cls);
 		BeanAttributeIntercepterFactory factory = getIntercepterFacotry(cls);
 		BeanAttributeIntercepter bai = factory.create();
+		eh.setCallback(bai);
+		T t = (T) eh.create();
+		bai.setTargetInstance(t);
+		return t ;
+	}
+	
+	public <T> T newOptimizedInstance(Class<T> cls) {
+		Enhancer eh = enhanceClass(cls);
+		BeanAttributeIntercepterFactory factory = getIntercepterFacotry(cls);
+		BeanAttributeIntercepter bai = factory.createOptimized();
 		eh.setCallback(bai);
 		T t = (T) eh.create();
 		bai.setTargetInstance(t);

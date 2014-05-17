@@ -13,8 +13,12 @@ public class BeanAttributeIntercepterFactory {
 		return new BeanAttributeIntercepter(this.classInspector);
 	}
 	
+	public BeanAttributeIntercepter createOptimized(){
+		return new OptimizedBeanAttributeIntercepter(this.classInspector);
+	}
+	
 	public static BeanAttributeIntercepter createIntercepter(ClassInspector ci){
 		return new BeanAttributeIntercepter(ci);
 	}
-	
+		
 }
