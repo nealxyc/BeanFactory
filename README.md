@@ -1,6 +1,6 @@
 BeanFactory
 ===========
-BeanFactory implements Java Bean style getter setter methods for your Interface.
+BeanFactory implements Java Bean style getter setter methods for your Interface. Underlying it uses [cglib](https://github.com/cglib/cglib) to intercept method calls.
 
 ## v0.1.0
 Could implement simple Interface
@@ -9,7 +9,7 @@ Could implement simple Interface
 public interface MyInterface{
 	public void setName(String name);
 	public String getName();
-	public void setNumber(int name);
+	public void setNumber(int num);
 	public int getNumber();
 }
 
