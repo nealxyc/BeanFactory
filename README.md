@@ -13,7 +13,7 @@ public interface MyInterface{
 	public int getNumber();
 }
 
-// User BeanFactory to create implementation
+// Use BeanFactory to create implementation
 BeanFactory factory = new BeanFactory();
 MyInterface mi = factory.newInstance(MyInterface.class);
 assertNotNull(mi);
