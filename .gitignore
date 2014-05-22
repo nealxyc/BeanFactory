@@ -1,6 +1,7 @@
 #
 .classpath 
 bin
+lib
 
 # mac stuff
 .DS_Store

@@ -25,7 +25,10 @@
         status="integration">
 	</info>
 	<dependencies>
-		<dependency org="cglib" name="cglib" rev="3.1"/>
+		<dependency org="cglib" name="cglib" rev="3.1">
+			<!-- We manually added asm-5.0.2 -->
+			<exclude module="asm.*" matcher="regexp"/>
+		</dependency>
 		<dependency org="com.google.guava" name="guava" rev="16.0.1"/>
 		<dependency org="org.hamcrest" name="hamcrest-library" rev="1.3"/>
 	</dependencies>
