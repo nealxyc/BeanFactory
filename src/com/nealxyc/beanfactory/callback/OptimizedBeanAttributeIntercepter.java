@@ -14,8 +14,8 @@ import net.sf.cglib.proxy.MethodProxy;
 
 public class OptimizedBeanAttributeIntercepter extends BeanAttributeIntercepter {
 
-    private IdentityHashMap<Method, Integer> getterIndexMap = Maps.newIdentityHashMap();
-    private IdentityHashMap<Method, Integer> setterIndexMap = Maps.newIdentityHashMap();
+    private Map<Method, Integer> getterIndexMap = Maps.newHashMap();
+    private Map<Method, Integer> setterIndexMap = Maps.newHashMap();
 
     protected OptimizedBeanAttributeIntercepter(ClassInspector ci) {
 	super(ci);

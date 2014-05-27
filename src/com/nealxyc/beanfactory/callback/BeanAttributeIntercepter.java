@@ -42,16 +42,22 @@ public class BeanAttributeIntercepter implements MethodInterceptor{
 				int i = findGetterIndex(method);
 				if(i > -1){
 				    return attrs[i].getValue() ;
+				}else{
+				  //getter not found 
+				   return proxy.invokeSuper(obj, args);
+				 
 				}
-				//TODO getter not found ?
 				
 			}else if(args.length == 1){
 				//find setter
 			    	int i = findSetterIndex(method);
 			    	if(i > -1){
 			    	    attrs[i].setValue(args[0]);
+			    	    return null;
+				}else{
+				    // setter not found ?
+				   return proxy.invokeSuper(obj, args);
 				}
-				//TODO setter not found ?
 				
 			}else{
 				//TODO exception ?

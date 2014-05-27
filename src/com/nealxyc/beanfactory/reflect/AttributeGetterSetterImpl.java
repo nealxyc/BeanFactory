@@ -1,6 +1,7 @@
 package com.nealxyc.beanfactory.reflect;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +57,6 @@ public class AttributeGetterSetterImpl implements AttributeGetterSetter {
 
     public static List<AttributeGetterSetter> getFromMethods(Method[] methods) {
 	List<AttributeGetterSetter> ret = Lists.newArrayList();
-	Map<String, Method> getterMap = Maps.newHashMap();
 	Map<String, Method> setterMap = Maps.newHashMap();
 	Collection<Method> getters = getGetters(methods);
 	Collection<Method> setters = getSetters(methods);
@@ -84,6 +84,7 @@ public class AttributeGetterSetterImpl implements AttributeGetterSetter {
 	public boolean apply(Method item) {
 	    String name = item.getName();
 	    return name != null && item.getParameterTypes().length == 0
+		    && Modifier.isAbstract(item.getModifiers())
 		    && ((name.startsWith("get") && item.getReturnType() != null)
 			    || (name.startsWith("is") && Boolean.class.isAssignableFrom(item.getReturnType())));
 	}
@@ -94,6 +95,7 @@ public class AttributeGetterSetterImpl implements AttributeGetterSetter {
 	public boolean apply(Method item) {
 	    String name = item.getName();
 	    return name != null && (name.startsWith("set"))
+		    && Modifier.isAbstract(item.getModifiers())
 		    && item.getParameterTypes().length == 1;
 	}
     };

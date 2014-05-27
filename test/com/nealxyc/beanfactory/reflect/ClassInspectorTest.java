@@ -21,13 +21,14 @@ public class ClassInspectorTest {
 	public void testReadClass() {
 		ClassInspector ci = ClassInspector.readClass(MyInterface.class);
 		assertNotNull(ci);
-		assertThat(ci.getAttributeGetterSetterList(), is(not(empty())));
-		assertThat(ci.getAttributeGetterSetterList(), hasSize(2));
+		assertTrue(ci.getAttributeGetterSetterList().size() > 0);
+		assertEquals(2, ci.getAttributeGetterSetterList().size());
 		for (AttributeGetterSetter attr : ci.getAttributeGetterSetterList()) {
-			assertThat(attr.getDescriptor().getName(),
-					anyOf(is("Name"), is("Code")));
-			assertTrue(attr.getDescriptor().getType().equals(String.class)
-					|| attr.getDescriptor().getType().equals(Object.class));
+		    String name = attr.getDescriptor().getName() ;
+		    Class<?> cls = attr.getDescriptor().getType() ;
+			assertTrue(name.equals("Name") ||name.equals("Code"));
+			assertTrue((String.class).equals(cls)
+					|| (Object.class).equals(cls));
 		}
 	}
 }

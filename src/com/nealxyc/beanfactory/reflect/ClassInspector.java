@@ -8,7 +8,12 @@ import com.google.common.collect.Lists;
 public class ClassInspector {
     
 	private final Class<?> cls ;
-//	private List<Method> methods ;
+	
+	public Class<?> getCls() {
+	    return cls;
+	}
+
+	//	private List<Method> methods ;
 	private List<AttributeGetterSetter> attributes = Lists.newArrayList();
 //	private Set<AttributeDescriptor> readOnlyAttributes = Sets.newHashSet();
 	
@@ -23,7 +28,7 @@ public class ClassInspector {
 	
 	public static ClassInspector readClass(Class<?> cls){
 	    ClassInspector ci = new ClassInspector(cls);
-	    List<AttributeGetterSetter> attrGetterSetters = AttributeGetterSetterImpl.getFromMethods(cls.getDeclaredMethods());
+	    List<AttributeGetterSetter> attrGetterSetters = AttributeGetterSetterImpl.getFromMethods(cls.getMethods());
 	    ci.attributes.addAll(attrGetterSetters);
 	    return ci ;
 	}
