@@ -128,9 +128,9 @@ public class PerformanceTest {
     public void testPrimitiveVsPojo() {
 	System.out.println();
 	System.out.println(String.format("====> Testing primitive type field access performance"));
+	n = 1000000 ;// 1 million ops
 	PrimitiveTest pt = factory.newInstance(PrimitiveTest.class);
 	start = System.currentTimeMillis();
-	n = 1000000 ;// 1 million ops
 	System.out.println(String.format("%sx%s set and %sx%s get method call",8,n, 8, n));
 	for (int i = 0; i < n; i++) {
 	    pt.setBoolean(true);
@@ -178,6 +178,30 @@ public class PerformanceTest {
 	}
 	end = System.currentTimeMillis();
 	System.out.println(String.format("BeanFacotry optimized instance: %s ms", end - start));
+	
+	pt = factory.newJavassistInstance(PrimitiveTest.class);
+	start = System.currentTimeMillis();
+	for (int i = 0; i < n; i++) {
+	    pt.setBoolean(true);
+	    pt.setByte((byte) 2);
+	    pt.setChar('a');
+	    pt.setShort((short) 2);
+	    pt.setInt(2);
+	    pt.setLong(2l);
+	    pt.setFloat(2.0f);
+	    pt.setDouble(2.0);
+
+	    pt.getBoolean();
+	    pt.getChar();
+	    pt.getByte();
+	    pt.getShort();
+	    pt.getInt();
+	    pt.getLong();
+	    pt.getFloat();
+	    pt.getDouble();
+	}
+	end = System.currentTimeMillis();
+	System.out.println(String.format("BeanFacotry javassist instance: %s ms",  end - start));
 
 	
 	//pojo implPrimitiveTest 
@@ -248,6 +272,15 @@ public class PerformanceTest {
 	end = System.currentTimeMillis();
 	System.out.println(String.format("BeanFactory optimized instance: %s ms", end - start));
 
+	//javassit
+	rt = factory.newJavassistInstance(ReferenceTest.class);
+	start = System.currentTimeMillis();
+	for (int i = 0; i < n; i++) {
+	    rt.setObj(new Object());
+	    rt.getObj();
+	}
+	end = System.currentTimeMillis();
+	System.out.println(String.format("BeanFactory javassist instance: %s ms", end - start));
 	
 	//pojo
 	rt = new ReferenceTestImpl();
@@ -298,7 +331,14 @@ public class PerformanceTest {
 	    factory.newInstance(ReferenceTest.class);
 	}
 	end = System.currentTimeMillis();
-	System.out.println(String.format("BeanFactory: %s ms",end - start));
+	System.out.println(String.format("BeanFactory(cglib): %s ms",end - start));
+	
+	start = System.currentTimeMillis();
+	for (int i = 0; i < n; i++) {
+	    factory.newJavassistInstance(ReferenceTest.class);
+	}
+	end = System.currentTimeMillis();
+	System.out.println(String.format("Javassist: %s ms",end - start));
 	
 	start = System.currentTimeMillis();
 	for (int i = 0; i < n; i++) {

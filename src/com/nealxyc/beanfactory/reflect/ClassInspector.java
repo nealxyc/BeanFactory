@@ -13,11 +13,7 @@ public class ClassInspector {
 	    return cls;
 	}
 
-	//	private List<Method> methods ;
 	private List<AttributeGetterSetter> attributes = Lists.newArrayList();
-//	private Set<AttributeDescriptor> readOnlyAttributes = Sets.newHashSet();
-	
-	//private
 	private ClassInspector(Class<?> cls){
 	    this.cls = cls ;
 	}
