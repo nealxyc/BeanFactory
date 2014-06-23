@@ -53,6 +53,20 @@ public class BeanFactory {
 	}
 	return implmeneterMap.get(cls);
     }
+    
+    private synchronized AbstractMethodImplementer getCompositeImplementer(Class<?> cls, Class<?> partial)
+	    throws NotFoundException {
+
+	if (!implmeneterMap.containsKey(cls)) {
+	    CtClass cc = ClassPool.getDefault().get(cls.getName());
+	    CtClass cp = ClassPool.getDefault().get(partial.getName());
+	    AbstractMethodImplementer implementer = new AbstractMethodImplementer(CtClassInspector.readClass(cc) );
+	    implementer.doImplement(cp);
+	    implmeneterMap.put(cls, implementer);
+
+	}
+	return implmeneterMap.get(cls);
+    }
 
     public <T> T newInstance(Class<T> cls) {
 	Enhancer eh = enhanceClass(cls);
@@ -81,13 +95,27 @@ public class BeanFactory {
 	    Class<?> implClass = implementer.getImplClass();
 	    return (T) implClass.newInstance();
 	} catch (NotFoundException e1) {
-	    // TODO Auto-generated catch block
 	    e1.printStackTrace();
 	} catch (InstantiationException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (IllegalAccessException e) {
-	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	return null;
+    }
+    
+    public <T> T newJavassistInstance(Class<T> cls, Class<?> partial) {
+	CtClass cc;
+	try {
+	    AbstractMethodImplementer implementer = getCompositeImplementer(cls, partial);
+	    Class<?> implClass = implementer.getImplClass();
+	    return (T) implClass.newInstance();
+	} catch (NotFoundException e1) {
+	    e1.printStackTrace();
+	} catch (InstantiationException e) {
+	    e.printStackTrace();
+	} catch (IllegalAccessException e) {
 	    e.printStackTrace();
 	}
 

@@ -58,6 +58,11 @@ public class CtAttributeGetterSetterImpl implements CtAttributeGetterSetter {
 			.getDeclaringClass().getSimpleName(), name));
     }
 
+    /**
+     * Return a list of CtAttributeGetterSetter objects containing getter/setter methods that are both abstract. 
+     * @param CtMethods
+     * @return
+     */
     public static List<CtAttributeGetterSetter> getFromMethods(CtMethod[] CtMethods) {
 	List<CtAttributeGetterSetter> ret = Lists.newArrayList();
 	Map<String, CtMethod> setterMap = Maps.newHashMap();

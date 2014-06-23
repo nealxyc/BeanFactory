@@ -154,4 +154,26 @@ public class BeanFactoryJavassistTest {
 	assertEquals(12, mi.getNumber());
 	assertEquals("my name:12", mi.getCode());
     }
+    
+    public static class MyClass {
+	
+	String name ;
+	public String getName(){
+	    return name ;
+	    
+	}
+	
+	public void setName(String name){
+	    this.name = name ;
+	}
+    }
+
+    @Test
+    public void testImplementConcreteClass() {
+	MyClass mi = factory.newJavassistInstance(MyClass.class);
+	assertNotNull(mi);
+	assertNull(mi.getName());
+	mi.setName("my name");
+	assertEquals("my name", mi.getName());
+    }
 }
