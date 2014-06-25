@@ -25,7 +25,7 @@ import javassist.NotFoundException;
 public class AbstractMethodImplementer {
 
     static final String IMPL_STUB = "$Impl";
-    static final String COMPOSITE_STUB = "$Composite" ;
+    static final String COMPOSITE_STUB = "$CompositeImpl" ;
     private CtClassInspector ci;
     private Class<?> implClass;
     private boolean implemented = false;
@@ -177,12 +177,12 @@ public class AbstractMethodImplementer {
 	}
 	CtClass comp = cls.getClassPool().makeClass(
 		implName);
-	comp.setInterfaces(new CtClass[] { cls });
 	try {
 	    comp.setSuperclass(partial);
 	} catch (CannotCompileException e) {
 	    e.printStackTrace();
 	}
+	comp.addInterface(cls);
 	//
 	ci = CtClassInspector.readClass(comp);
 	impl = comp ;
@@ -215,9 +215,6 @@ public class AbstractMethodImplementer {
 		implSetter.setBody("this." + attr.getName() + "=$1" + ";");
 		impl.addMethod(implSetter);
 	    }
-	    //Add default constructor
-	    CtConstructor constructor = CtNewConstructor.defaultConstructor(impl);
-	    impl.addConstructor(constructor);
 	    
 	    this.implClass = impl.toClass(this.getClass().getClassLoader(),
 		    this.getClass().getProtectionDomain());

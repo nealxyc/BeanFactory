@@ -176,4 +176,41 @@ public class BeanFactoryJavassistTest {
 	mi.setName("my name");
 	assertEquals("my name", mi.getName());
     }
+    
+    public static interface GType{
+	
+	public <T> void setValue(T t);
+	public <T> T getValue();
+	
+    }
+    @Test
+    public void testGenericTypes(){
+	GType gt = factory.newJavassistInstance(GType.class);
+	assertNotNull(gt);
+	
+	gt.setValue("this is a string");
+	assertEquals("this is a string", gt.getValue());
+	
+	gt.setValue(new StringBuffer("this is a string"));
+	assertEquals("this is a string", ((StringBuffer)gt.getValue()).toString());
+    }
+    
+    public static interface GType2<T>{
+	
+	public void setValue(T t);
+	public T getValue();
+	
+    }
+    
+    @Test
+    public void testGenericTypes2(){
+	GType2<String> gt = factory.newJavassistInstance(GType2.class);
+	assertNotNull(gt);
+	
+	gt.setValue("this is a string");
+	assertEquals("this is a string", gt.getValue());
+	
+//	gt.setValue(new StringBuffer("this is a string"));
+//	assertEquals("this is a string", ((StringBuffer)gt.getValue()).toString());
+    }
 }
