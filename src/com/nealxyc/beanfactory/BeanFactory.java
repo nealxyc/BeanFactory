@@ -70,6 +70,37 @@ public class BeanFactory {
 	}
 	return implmeneterMap.get(cls);
     }
+    
+	private synchronized AbstractMethodImplementer getCompositeImplementer(
+			Class<?> cls, Class<?> partial, String implClassName)
+			throws NotFoundException {
+
+		if (implmeneterMap.containsKey(cls)) {
+			Class<?> implClass = implmeneterMap.get(cls).getImplClass();
+			if (implClass.getName().equals(implClassName) // full name matches
+					|| cls.getPackage() != null
+					&& (implClass.getName().equals(cls.getPackage().getName()
+							+ "." + implClassName))) { // (cls.package + simple name) matches
+				return implmeneterMap.get(cls);
+			}
+		}
+		// No allow default package name of the impl class. (Unless the interface cls is in default package as well)
+		int lastDot = implClassName.lastIndexOf('.') ;
+		String p = implClassName.substring(0, Math.max(lastDot, 0));
+		if(p.equals("") && cls.getPackage() != null && !cls.getPackage().getName().equals("")){
+			implClassName = cls.getPackage().getName() + "." + implClassName ;
+		}
+		// re-implement interface cls
+		CtClass cc = ClassPool.getDefault().get(cls.getName());
+		CtClass cp = ClassPool.getDefault().get(partial.getName());
+		AbstractMethodImplementer implementer = new AbstractMethodImplementer(
+				CtClassInspector.readClass(cc));
+		implementer.setImplName(implClassName);
+		implementer.doImplement(cp);
+		implmeneterMap.put(cls, implementer);
+
+		return implementer;
+	}
 
     public <T> T newInstance(Class<T> cls) {
 	Enhancer eh = enhanceClass(cls);
@@ -128,5 +159,33 @@ public class BeanFactory {
 
 	return null;
     }
+    
+    /**
+     * Create 
+     * @param cls
+     * @param partial
+     * @param implClassName
+     * @return
+     */
+    public <T> T newJavassistInstance(Class<T> cls, Class<?> partial, String implClassName) {
+    	CtClass cc;
+    	try {
+    	    AbstractMethodImplementer implementer = getCompositeImplementer(cls, partial, implClassName);
+    	    Class<?> implClass = implementer.getImplClass();
+    	    return (T) implClass.newInstance();
+    	} catch (NotFoundException e1) {
+    	    e1.printStackTrace();
+    	} catch (SecurityException e) {
+    	    e.printStackTrace();
+    	} catch (InstantiationException e) {
+    	    e.printStackTrace();
+    	} catch (IllegalAccessException e) {
+    	    e.printStackTrace();
+    	} catch (IllegalArgumentException e) {
+    	    e.printStackTrace();
+    	} 
+
+    	return null;
+        }
 
 }

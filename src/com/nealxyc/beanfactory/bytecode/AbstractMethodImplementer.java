@@ -50,7 +50,7 @@ public class AbstractMethodImplementer {
 	}
 	CtClass cls = ci.getCls();
 	CtClass impl;
-	implName = cls.getName() + IMPL_STUB;
+	implName = implName != null? implName: (cls.getName() + IMPL_STUB);
 	try {
 	    impl = cls.getClassPool().get(implName);
 	    if (impl != null) {
@@ -132,7 +132,7 @@ public class AbstractMethodImplementer {
 	}
 	CtClass cls = ci.getCls();
 	CtClass impl;
-	implName = cls.getName() + COMPOSITE_STUB;
+	implName = implName != null? implName: (cls.getName() + COMPOSITE_STUB);
 	try {
 	    impl = cls.getClassPool().get(implName);
 	    if (impl != null) {
@@ -227,4 +227,12 @@ public class AbstractMethodImplementer {
     public Class<?> getImplClass() {
 	return implClass;
     }
+
+	public String getImplName() {
+		return implName;
+	}
+
+	public void setImplName(String implName) {
+		this.implName = implName;
+	}
 }

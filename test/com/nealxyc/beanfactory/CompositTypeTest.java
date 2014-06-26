@@ -110,7 +110,6 @@ public class CompositTypeTest {
 	
 	assertTrue(I1.class.isAssignableFrom(i.getClass()));
 	assertNotEquals(I1.class, i.getClass());
-	println(i.getClass());
     }
     
     @Test
@@ -132,12 +131,11 @@ public class CompositTypeTest {
 	
 	assertTrue(I1.class.isAssignableFrom(i.getClass()));
 	assertNotEquals(I1.class, i.getClass());
-	println(i.getClass());
     }
     
     @Test
     public void testI3Impl(){
-	I3 i = factory.newJavassistInstance(I3.class, Impl.class);
+	I3 i = factory.newJavassistInstance(I3.class, Impl.class, "I3$AnotherImpl");
 	assertNotNull(i);
 	
 	i.setName("my name");
@@ -154,7 +152,6 @@ public class CompositTypeTest {
 	
 	assertTrue(I1.class.isAssignableFrom(i.getClass()));
 	assertNotEquals(I1.class, i.getClass());
-	println(i.getClass());
     }
     
     @Test
@@ -171,6 +168,39 @@ public class CompositTypeTest {
 	assertNotNull(constructors);
 	assertEquals(1, constructors.length);
 	assertEquals(0, constructors[0].getTypeParameters().length);
+    }
+    
+    @Test
+    public void testCustomizedClassName(){
+    	String name = "I3$AnotherImpl2" ;
+    	I3 i = factory.newJavassistInstance(I3.class, Impl.class, name);
+    	assertNotNull(i);
+    	assertEquals(name, i.getClass().getSimpleName());
+    	assertTrue(i instanceof I3);
+    	assertTrue(i instanceof Impl);
+    	assertEquals(I3.class.getPackage(), i.getClass().getPackage());
+    }
+    
+    @Test
+    public void testCustomizedPackageClassName(){
+    	String name = "com.nealxyc.gen.I3$AnotherImpl" ;
+    	I3 i = factory.newJavassistInstance(I3.class, Impl.class, name);
+    	assertNotNull(i);
+    	assertEquals(name, i.getClass().getName());
+    	assertTrue(i instanceof I3);
+    	assertTrue(i instanceof Impl);
+    	assertNotEquals(I3.class.getPackage(), i.getClass().getPackage());
+    }
+    
+    @Test
+    public void testCustomizedPackageClassName2(){
+    	String name = "MyClassName" ;
+    	I3 i = factory.newJavassistInstance(I3.class, Impl.class, name);
+    	assertNotNull(i);
+    	assertEquals(name, i.getClass().getSimpleName());
+    	assertTrue(i instanceof I3);
+    	assertTrue(i instanceof Impl);
+    	assertEquals(I3.class.getPackage(), i.getClass().getPackage());
     }
     
     public void println(Object o){
